@@ -1,15 +1,19 @@
 #!/bin/bash -e
-
 on_chroot sh -e - <<EOF
-update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo
-update-gconf-defaults
+useradd -u 999 -g 999 -rm homeassistant
 EOF
 
+install -v -o 999 -g 999 -d		${ROOTFS_DIR}/srv/homeassistant
+install -m 644 files/home-assistant@homeassistant.service		${ROOTFS_DIR}/etc/systemd/system/
+install -m 755 files/install_homeassistant.service		${ROOTFS_DIR}/etc/systemd/system/
+install -m 755 files/install_homeassistant.sh		${ROOTFS_DIR}/usr/local/bin/
+
 on_chroot sh -e - <<EOF
-update-alternatives --install /usr/share/images/desktop-base/desktop-background \
-desktop-background /usr/share/raspberrypi-artwork/raspberry-pi-logo.png 100
+systemctl enable install_homeassistant.service
 EOF
 
-rm -f							${ROOTFS_DIR}/etc/systemd/system/dhcpcd.service.d/wait.conf
-install -m 644 files/55-storage.pkla			${ROOTFS_DIR}/etc/polkit-1/localauthority/50-local.d/
-install -m 644 files/75source-profile		${ROOTFS_DIR}/etc/X11/Xsession.d/
+on_chroot sh -e - << \EOF
+for GRP in video gpio; do
+  adduser homeassistant $GRP
+done
+EOF
