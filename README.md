@@ -1,7 +1,17 @@
-#TODO
+Fork of ``pi_gen` by @RPI-Distro.
 
-1. Simplify running a single stage
-1. Documentation
+#Building your own
+The Haspbian image is built with the same script that generates the official [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) image's from the [Raspberry Pi Foundation](https://www.raspberrypi.org/about/).
+
+By default the Haspbian image is built on a Debian 8 droplet on Digital Ocean and takes about 30 minutes to build in the cheapest droplet. Dependencies and everything is handled by the build script with the exception of `git`.
+
+Build instructions:
+- Install git. ``sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install git`
+- Clone the `rpi_gen` code. `git clone `
+- Run the build script, with sudo or as root.  `sudo ./build.sh`
+- Wait ~30 minutes for build to complete.
+- Retrieve your freshly built Raspberry Pi image from the `rpi_gen\deploy` folder.
+
 
 #Dependencies
 
@@ -23,10 +33,6 @@ A simple example for building Raspbian:
 ```bash
 IMG_NAME='Raspbian'
 ```
-
-#Stage Anatomy
-
-
 
 #Raspbian Stage Overview
 
@@ -66,13 +72,4 @@ maintenance and allows for more easy customization.
    you were looking for something between truly minimal and Raspbian-lite,
    here's where you start trimming.
 
- - Stage 3, desktop system.  Here's where you get the full desktop system
-   with X11 and LXDE, web browsers, git for development, Raspbian custom UI
-   enhancements, etc.  This is a base desktop system, with some development
-   tools installed.
-
- - Stage 4, complete Raspbian system.  More development tools, an email
-   client, learning tools like Scratch, specialized packages like sonic-pi and
-   wolfram-engine, system documentation, office productivity, etc.  This is
-   the stage that installs all of the things that make Raspbian friendly to
-   new users.
+ - Stage 3, This is where all the Home Assistant specific stuff are installed.
