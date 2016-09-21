@@ -1,4 +1,4 @@
-Fork of ``pi_gen` by @RPI-Distro.
+Fork of `pi_gen` by [@RPI-Distro](https://github.com/RPi-Distro/pi-gen).
 
 #Building your own
 The Haspbian image is built with the same script that generates the official [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) image's from the [Raspberry Pi Foundation](https://www.raspberrypi.org/about/).
