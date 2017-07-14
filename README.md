@@ -16,9 +16,18 @@ Build instructions:
 - Retrieve your freshly built Raspberry Pi image from the `rpi_gen\deploy` folder.
 
 
-### Dependencies
+## Dependencies
 
-`quilt parted realpath qemu-user-static debootstrap zerofree pxz zip dosfstools bsdtar libcap2-bin grep rsync`
+On Debian-based systems:
+
+```bash
+apt-get install quilt parted realpath qemu-user-static debootstrap zerofree pxz zip \
+dosfstools bsdtar libcap2-bin grep rsync
+```
+
+The file `depends` contains a list of tools needed.  The format of this
+package is `<tool>[:<debian-package>]`.
+
 
 ## Config
 
@@ -28,14 +37,46 @@ environment variables.
 
 The following environment variables are supported:
 
- * `IMG_NAME`, the name of the distribution to build (required)
  * `APT_PROXY`, proxy/cache URL to be included in the build
 
+ * `IMG_NAME`, the name of the distribution to build (required)
+   The name of the image to build with the current stage directories.  Setting
+   `IMG_NAME=Raspbian` is logical for an unmodified RPi-Distro/pi-gen build,
+   but you should use something else for a customized version.  Export files
+   in stages may add suffixes to `IMG_NAME`.
+
+ * `APT_PROXY` (Default: unset)
+
+   If you require the use of an apt proxy, set it here.  This proxy setting
+   will not be included in the image, making it safe to use an `apt-cacher` or
+   similar package for development.
+
+ * `BASE_DIR`  (Default: location of `build.sh`)
+
+   **CAUTION**: Currently, changing this value will probably break build.sh
+
+   Top-level directory for `pi-gen`.  Contains stage directories, build
+   scripts, and by default both work and deployment directories.
+
+ * `WORK_DIR`  (Default: `"$BASE_DIR/work"`)
+
+   Directory in which `pi-gen` builds the target system.  This value can be
+   changed if you have a suitably large, fast storage location for stages to
+   be built and cached.  Note, `WORK_DIR` stores a complete copy of the target
+   system for each build stage, amounting to tens of gigabytes in the case of
+   Raspbian.
+
+ * `DEPLOY_DIR`  (Default: `"$BASE_DIR/deploy"`)
+
+   Output directory for target system images and NOOBS bundles.
+
 A simple example for building Hassbian:
+=======
 
 ```bash
 IMG_NAME='Hassbian'
 ```
+
 
 ## Docker Build
 
@@ -43,19 +84,26 @@ IMG_NAME='Hassbian'
 nano config         # Edit your config file. See above.
 ./build-docker.sh
 ```
+
 If everything goes well, your finished image will be in the `deploy/` folder.
-You can then remove the build container with `docker rm pigen_work`
+You can then remove the build container with `docker rm -v pigen_work`
 
 If something breaks along the line, you can edit the corresponding scripts, and
 continue:
 
-```
+```bash
 CONTINUE=1 ./build-docker.sh
 ```
 
-There is a possibility that even when running from a docker container, the installation of `qemu-user-static` will silently fail when building the image because `binfmt-support` _must be enabled on the underlying kernel_. An easy fix is to ensure `binfmt-support` is installed on the host machine before starting the `./build-docker.sh` script (or using your own docker build solution).
+There is a possibility that even when running from a docker container, the
+installation of `qemu-user-static` will silently fail when building the image
+because `binfmt-support` _must be enabled on the underlying kernel_. An easy
+fix is to ensure `binfmt-support` is installed on the host machine before
+starting the `./build-docker.sh` script (or using your own docker build
+solution).
 
-### Raspbian Stage Anatomy
+
+### Hasspbian Stage Anatomy
 
 The build of Hassbian is divided up into several stages for logical clarity
 and modularity.  This causes some initial complexity, but it simplifies
@@ -101,15 +149,26 @@ maintenance and allows for more easy customization.
    The original **Stage 4** and **Stage 5** are removed since they are not
    used on the HASSbian image.
 
-### Stage specification
-If you wish to build up to a specified stage (such as building up to stage 2 for a lite system), place an empty file named `SKIP` in each of the `./stage` directories you wish not to include.
 
-Then remove the `EXPORT*` files from `./stage3` (if building up to stage 2) and add them to `./stage2`.
-
-```
 ## Example for building a lite system without Home Assistant
 $ touch ./stage3/SKIP 
 $ rm stage3/EXPORT*
 $ touch stage3/EXPORT_IMAGE
 ```
 If you wish to build further configurations upon (for example) the lite system, you can also delete the contents of `./stage3` and replace with your own contents in the same format.
+
+=======
+If you wish to build up to a specified stage (such as building up to stage 2
+for a lite system), place an empty file named `SKIP` in each of the `./stage`
+directories you wish not to include.
+
+Then remove the `EXPORT*` files from `./stage4` (if building up to stage 2) or
+from `./stage2` (if building a minimal system).
+
+```bash
+# Example for building a lite system
+echo "IMG_NAME='Raspbian'" > config
+touch ./stage3/SKIP ./stage4/SKIP ./stage5/SKIP
+rm stage4/EXPORT*
+sudo ./build.sh  # or ./build-docker.sh
+```
