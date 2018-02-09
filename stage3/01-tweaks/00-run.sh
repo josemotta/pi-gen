@@ -6,11 +6,16 @@ useradd -u 1001 -g 1001 -rm homeassistant
 EOF
 
 install -v -o 1001 -g 1001 -d ${ROOTFS_DIR}/srv/homeassistant
-wget -O files/hassbian-scripts-0.4.deb https://github.com/home-assistant/hassbian-scripts/releases/download/v0.4/hassbian-scripts_0.4.deb
-install -v -m 600 files/hassbian-scripts-0.4.deb ${ROOTFS_DIR}/srv/homeassistant/
+
+# Download latest Hassbian-scripts package
+cd /tmp
+curl https://api.github.com/repos/home-assistant/hassbian-scripts/releases/latest | grep "browser_download_url.*deb" | cut -d : -f 2,3 | tr -d \" | wget -qi -
+HASSBIAN_PACKAGE=$(ls /tmp| grep 'hassbian*')
+install -v -m 600 /tmp/$HASSBIAN_PACKAGE ${ROOTFS_DIR}/srv/homeassistant/
+rm $HASSBIAN_PACKAGE
 
 on_chroot << EOF
-dpkg -i /srv/homeassistant/hassbian-scripts-0.4.deb
+dpkg -i /srv/homeassistant/*.deb
 EOF
 
 on_chroot << EOF
@@ -18,11 +23,10 @@ systemctl enable install_homeassistant
 EOF
 
 on_chroot << \EOF
-for GRP in dialout gpio spi i2c video; do
+for GRP in dialout gpio i2c input netdev spi video; do
         adduser homeassistant $GRP
 done
 for GRP in homeassistant; do
   adduser pi $GRP
 done
 EOF
-
