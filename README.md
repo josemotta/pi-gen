@@ -5,7 +5,6 @@ The Haspbian image is built with the same script that generates the official [Ra
 
 By default the Haspbian image is built on a Debian 8 droplet on Digital Ocean and takes about 30 minutes to build on the cheapest droplet. Dependencies and everything is handled by the build script with the exception of `git`.
 
-<<<<<<< HEAD
 Since this image is based on [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) it keeps the default password and username from [Raspbian](https://www.raspberrypi.org/downloads/raspbian/). Default user for use locally or over ssh is `pi` and the password is `raspberry`.
 
 Build instructions:
@@ -18,7 +17,7 @@ Build instructions:
 
 
 =======
->>>>>>> 066eb03d52868290661e813738a9a66eda263aa9
+
 ## Dependencies
 
 pi-gen runs on Debian based operating systems. Currently it is only supported on
@@ -85,7 +84,6 @@ The following environment variables are supported:
 
    Output directory for target system images and NOOBS bundles.
 
-<<<<<<< HEAD
 A simple example for building Hassbian:
 =======
 =======
@@ -95,7 +93,6 @@ A simple example for building Hassbian:
 
 
 A simple example for building Raspbian:
->>>>>>> 066eb03d52868290661e813738a9a66eda263aa9
 
 ```bash
 IMG_NAME='Hassbian'
@@ -238,7 +235,7 @@ touch ./stage3/SKIP ./stage4/SKIP ./stage5/SKIP
 rm stage4/EXPORT* stage5/EXPORT*
 sudo ./build.sh  # or ./build-docker.sh
 ```
-<<<<<<< HEAD
+
 =======
 
 If you wish to build further configurations upon (for example) the lite
@@ -261,5 +258,3 @@ follows:
  * Rebuild just the last stage using ```sudo CLEAN=1 ./build.sh```
  * Once you're happy with the image you can remove the SKIP_IMAGES files and
    export your image to test
-
->>>>>>> 066eb03d52868290661e813738a9a66eda263aa9
