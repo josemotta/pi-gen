@@ -30,3 +30,4 @@ for GRP in homeassistant; do
   adduser pi $GRP
 done
 EOF
+
