@@ -10,6 +10,7 @@ install -m 644 files/lirc24.conf "${ROOTFS_DIR}/etc/lirc/lircd.conf.d/lirc24.con
 install -m 644 files/lirc44.conf "${ROOTFS_DIR}/etc/lirc/lircd.conf.d/lirc44.conf"
 install -m 644 files/Samsung_BN59-00678A.conf "${ROOTFS_DIR}/etc/lirc/lircd.conf.d/Samsung_BN59-00678A.conf"
 install -m 644 files/AppConfig.json "${ROOTFS_DIR}/app"
+install -m 755 files/usb_backup.sh "${ROOTFS_DIR}/home/homeassistant/usb_backup.sh"
 
 rm -f "${ROOTFS_DIR}/etc/default/keyboard"
 install -m 644 files/keyboard "${ROOTFS_DIR}/etc/default/keyboard"
