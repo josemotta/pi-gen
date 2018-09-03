@@ -1,2 +1,3 @@
-lirc
+lirc build-essential libi2c-dev i2c-tools
+
 
