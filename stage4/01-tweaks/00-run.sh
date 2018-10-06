@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 install -d "${ROOTFS_DIR}/var/run/lirc"
-install -m 644 -d "${ROOTFS_DIR}/home/pi/config"
-install -m 644 -d "${ROOTFS_DIR}/home/pi/backup"
+install -m 666 -d "${ROOTFS_DIR}/home/pi/config"
+install -m 666 -d "${ROOTFS_DIR}/home/pi/backup"
 
 rm -f "${ROOTFS_DIR}/etc/lirc/lircd.conf.d/devinput.lircd.conf"
 
@@ -21,9 +21,7 @@ install -m 755 files/setup.sh "${ROOTFS_DIR}/home/pi/setup.sh"
 rm -f "${ROOTFS_DIR}/etc/default/keyboard"
 install -m 644 files/keyboard "${ROOTFS_DIR}/etc/default/keyboard"
 
-smbpasswd -a pi elefante
-
-cat << EOF >> /etc/samba/smb.conf
+cat << EOF >> ${ROOTFS_DIR}/etc/samba/smb.conf
 [config]
     path = /home/pi/config
     available = yes
