@@ -12,7 +12,8 @@ install -m 644 files/lirc44.conf "${ROOTFS_DIR}/etc/lirc/lircd.conf.d/lirc44.con
 install -m 644 files/Samsung_BN59-00678A.conf "${ROOTFS_DIR}/etc/lirc/lircd.conf.d/Samsung_BN59-00678A.conf"
 install -m 644 files/AppConfig.json "${ROOTFS_DIR}/home/pi/AppConfig.json"
 
-install -m 755 files/setup.sh "${ROOTFS_DIR}/home/pi/setup.sh"
+install -m 755 files/setup-hassbian.sh "${ROOTFS_DIR}/home/pi/setup-hassbian.sh"
+install -m 755 files/setup-hassio.sh "${ROOTFS_DIR}/home/pi/setup-hassio.sh"
 
 rm -f "${ROOTFS_DIR}/etc/default/keyboard"
 install -m 644 files/keyboard "${ROOTFS_DIR}/etc/default/keyboard"
