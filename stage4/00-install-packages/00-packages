@@ -1,3 +1,1 @@
-lirc build-essential libi2c-dev i2c-tools
-
-
+lirc build-essential libi2c-dev i2c-tools apparmor-utils apt-transport-https avahi-daemon ca-certificates curl dbus jq network-manager socat software-properties-common
